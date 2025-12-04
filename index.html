@@ -1,8 +1,399 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LO KYO's ART</title>
+<style>
+  :root{
+    --bg:#0b0f13; --card:#0f1720; --muted:#a7b0bb; --accent:#6ce;
+    --glass: rgba(255,255,255,0.03);
+  }
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e8f0ff;background:
+    linear-gradient(180deg,#050609 0%, #081018 100%); -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1200px;margin:28px auto;padding:20px;display:grid;grid-template-columns:1fr;gap:20px}
+  header{display:flex;gap:18px;align-items:center;justify-content:space-between}
+  .brand{display:flex;gap:14px;align-items:center}
+  .logo{
+    width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#3b8);
+    display:inline-grid;place-items:center;font-weight:700;color:#022;padding:8px;
+    box-shadow:0 6px 20px rgba(30,50,70,.5)
+  }
+  h1{font-size:20px;margin:0}
+  nav a{color:var(--muted);text-decoration:none;margin-left:14px;font-size:14px}
+  nav a:hover{color:var(--accent)}
+  .hero{background:var(--card);border-radius:12px;padding:18px;display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:center;box-shadow:0 12px 40px rgba(2,8,20,.6)}
+  .hero .intro h2{margin:0 0 6px 0;font-size:22px}
+  .intro p{margin:0;color:var(--muted)}
+  .cta{margin-top:12px}
+  button{background:linear-gradient(180deg,#13202b,#0f1620);border:1px solid rgba(255,255,255,.04);color:#e8f7ff;padding:10px 14px;border-radius:10px;cursor:pointer}
+  .card{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 8px 24px rgba(2,8,20,.6)}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+  .thumb{border-radius:8px;overflow:hidden;cursor:pointer;position:relative;border:1px solid rgba(255,255,255,.03)}
+  .thumb img, .thumb svg{width:100%;height:160px;object-fit:cover;display:block}
+  .thumb .label{position:absolute;left:8px;bottom:8px;background:var(--glass);padding:6px 8px;border-radius:6px;font-size:12px;color:var(--muted)}
+  .player{display:flex;flex-direction:column;gap:12px}
+  .playlist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto;padding-right:6px}
+  .track-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;cursor:pointer}
+  .track-item:hover{background:rgba(255,255,255,0.02)}
+  .track-item.active{background:linear-gradient(90deg, rgba(108,204,238,0.12), rgba(108,204,238,0.04));outline:1px solid rgba(108,204,238,0.06)}
+  .controls{display:flex;gap:8px;align-items:center}
+  .bigplay{font-size:18px;padding:10px 14px;border-radius:10px}
+  .progress{height:8px;background:rgba(255,255,255,0.03);border-radius:6px;overflow:hidden;flex:1}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#4fc);width:0%}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:10px}
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(2,6,12,0.7);display:none;align-items:center;justify-content:center;padding:28px;z-index:60}
+  .modal.open{display:flex}
+  .modal .media{max-width:1100px;width:100%;max-height:90vh;background:var(--card);border-radius:12px;padding:16px;display:grid;grid-template-columns:1fr 260px;gap:12px;align-items:start}
+  .modal img{max-width:100%;height:auto;border-radius:8px;display:block}
+  .meta h3{margin:0 0 8px 0}
+  /* responsive */
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr}
+    .modal .media{grid-template-columns:1fr}
+    .wrap{padding:12px}
+  }
+  /* small helpers */
+  input[type=range]{width:120px}
+  .contact{display:grid;gap:8px}
+  .muted{color:var(--muted);font-size:13px}
+  /* scrollbar small */
+  .playlist::-webkit-scrollbar{width:8px}
+  .playlist::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.04);border-radius:10px}
+</style>
+</head>
 <body>
-    <title>lokyo.github.io</title>
-    <h1>Hello World</h1>
-    <p>I'm hosted with GitHub Pages.</p>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">LO</div>
+      <div>
+        <h1>LO KYO — Art & Music</h1>
+        <div class="muted">Visual artist & composer / beats · ambient · experimental</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#gallery">Gallery</a>
+      <a href="#music">Music</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero card" aria-label="Intro">
+    <div class="intro">
+      <h2>Welcome — Creative experiments in sound & image</h2>
+      <p>Browse artworks and musical pieces below. Click any artwork to enlarge it. Use the player to listen and build a quick listening session.</p>
+      <div class="cta">
+        <button onclick="document.getElementById('music').scrollIntoView({behavior:'smooth'})">Open Player</button>
+        <button style="margin-left:8px" onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">See Gallery</button>
+      </div>
+    </div>
+
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:13px;color:var(--muted)">Featured artwork</div>
+      <!-- Replace the SVG below with your image by inserting <img src='path/to/your.jpg'/> -->
+      <div style="border-radius:8px;overflow:hidden">
+        <svg viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder artwork">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6ce"/><stop offset="1" stop-color="#4fc"/></linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="#06101a"/>
+          <circle cx="420" cy="120" r="110" fill="url(#g)" opacity="0.12"/>
+          <rect x="38" y="48" width="330" height="260" rx="18" fill="#081420" stroke="#0d4863" stroke-opacity="0.12"/>
+          <text x="60" y="200" fill="#95a8b8" font-size="22" font-family="sans-serif">Replace with your artwork</text>
+        </svg>
+      </div>
+      <div class="muted">Tip: replace inline SVG with an <code>&lt;img src=&quot;your-image.jpg&quot;&gt;</code> or a data URL for a single-file portfolio.</div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery" class="card">
+    <h3 style="margin:0 0 10px 0">Gallery</h3>
+    <div class="gallery" id="galleryGrid">
+      <!-- Thumbnails: these are SVG placeholders — replace <div class="thumb"> content with <img src="..." alt=""> -->
+    </div>
+  </section>
+
+  <!-- Music player -->
+  <section id="music" class="card player">
+    <h3 style="margin:0 0 6px 0">Music — playlist</h3>
+    <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+      <div class="controls">
+        <button class="bigplay" id="prevBtn">⏮</button>
+        <button class="bigplay" id="playBtn">▶</button>
+        <button class="bigplay" id="nextBtn">⏭</button>
+        <div style="width:12px"></div>
+        <div class="progress" id="progressWrap" aria-hidden="false" title="Progress">
+          <i id="progressBar"></i>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <label class="muted">Vol <input id="vol" type="range" min="0" max="1" step="0.01" value="0.9"></label>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px">
+      <div style="flex:1">
+        <div class="playlist" id="playlist"></div>
+      </div>
+      <div style="width:260px">
+        <div class="card" style="padding:12px">
+          <div style="font-size:13px;color:var(--muted)">Now playing</div>
+          <div id="nowTitle" style="font-weight:600;margin-top:6px">—</div>
+          <div id="nowInfo" class="muted" style="margin-top:6px">duration: —</div>
+          <audio id="audio" preload="metadata"></audio>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="card">
+    <h3 style="margin:0 0 6px 0">About</h3>
+    <p class="muted" style="margin:0">Hi — I'm LO KYO. This mini-site showcases a selection of my visual works and compositions. Replace the images and audio in the code with your own files to personalize the site. If you'd like, I can add downloadable tracks, embedded video or Bandcamp/Spotify links.</p>
+  </section>
+
+  <section id="contact" class="card contact">
+    <h3 style="margin:0 0 6px 0">Contact</h3>
+    <div class="muted">Email: <a href="mailto:you@example.com">you@example.com</a> — Instagram / X / Linktree (replace with your links)</div>
+  </section>
+
+  <footer>Built as a single-file static portfolio • Edit images/audio inside the HTML</footer>
+</div>
+
+<!-- Script (single-file logic) -->
+<script>
+(function(){
+  // ---------- Utility: placeholders for gallery ----------
+  const galleryData = [
+    {title: 'Untitled 01', desc:'oil on canvas', src: null},
+    {title: 'Untitled 02', desc:'digital collage', src: null},
+    {title: 'Untitled 03', desc:'mixed media', src: null},
+    {title: 'Untitled 04', desc:'ink studies', src: null},
+    {title: 'Untitled 05', desc:'photographic', src: null},
+    {title: 'Untitled 06', desc:'abstract study', src: null}
+  ];
+
+  const galleryGrid = document.getElementById('galleryGrid');
+
+  // Generates an inline SVG data URL placeholder (keeps file standalone).
+  function svgPlaceholder(title, w=600,h=360){
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>
+      <rect width='100%' height='100%' fill='#07101a'/>
+      <defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#6ce'/><stop offset='1' stop-color='#4fc'/></linearGradient></defs>
+      <rect x='20' y='20' width='${w-40}' height='${h-40}' rx='12' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.03)'/>
+      <text x='50%' y='50%' fill='#9fb3c6' font-size='20' font-family='sans-serif' dominant-baseline='middle' text-anchor='middle'>${title}</text>
+    </svg>`;
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+  }
+
+  galleryData.forEach((g, i)=>{
+    const t = document.createElement('div');
+    t.className = 'thumb';
+    const img = document.createElement('img');
+    img.alt = g.title;
+    img.src = g.src || svgPlaceholder(g.title);
+    const lbl = document.createElement('div');
+    lbl.className = 'label';
+    lbl.textContent = g.title;
+    t.appendChild(img); t.appendChild(lbl);
+    t.addEventListener('click', ()=>openModal(i));
+    galleryGrid.appendChild(t);
+  });
+
+  // ---------- Lightbox modal ----------
+  const modal = document.createElement('div'); modal.className='modal'; modal.id='modal';
+  modal.innerHTML = `<div class="media">
+    <div style="overflow:auto"><img id="modalImg" alt=""/></div>
+    <div class="meta">
+      <h3 id="modalTitle"></h3>
+      <div id="modalDesc" class="muted"></div>
+      <div style="margin-top:12px"><button id="modalClose">Close</button></div>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById('modalClose').addEventListener('click', ()=>modal.classList.remove('open'));
+
+  function openModal(index){
+    const data = galleryData[index];
+    document.getElementById('modalImg').src = data.src || svgPlaceholder(data.title, 900,540);
+    document.getElementById('modalTitle').textContent = data.title;
+    document.getElementById('modalDesc').textContent = data.desc || '';
+    modal.classList.add('open');
+  }
+
+  // close modal on outside click
+  modal.addEventListener('click', (e)=>{ if(e.target === modal) modal.classList.remove('open'); });
+
+  // ---------- Audio player / playlist ----------
+  // Replace these example tracks with your actual files (local file paths or data URLs).
+  const playlist = [
+    {title:'Track A — Short Loop', file:null, durationText:'—'},
+    {title:'Track B — Ambient', file:null, durationText:'—'},
+    {title:'Track C — Beat', file:null, durationText:'—'}
+  ];
+  // For a single-file site: use data URLs or base64-encoded audio in playlist[].file
+  // Example: playlist[0].file = 'audio/track1.mp3' or 'data:audio/mp3;base64,...'
+
+  const playlistEl = document.getElementById('playlist');
+  const audio = document.getElementById('audio');
+  const playBtn = document.getElementById('playBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const vol = document.getElementById('vol');
+  const progressBar = document.getElementById('progressBar');
+  const nowTitle = document.getElementById('nowTitle');
+  const nowInfo = document.getElementById('nowInfo');
+
+  let current = 0, isPlaying = false, progTimer = null;
+
+  function renderPlaylist(){
+    playlistEl.innerHTML = '';
+    playlist.forEach((t,i)=>{
+      const item = document.createElement('div');
+      item.className = 'track-item'; if(i===current) item.classList.add('active');
+      item.innerHTML = `<div style="width:10px"></div>
+        <div style="flex:1">
+          <div style="font-weight:600">${t.title}</div>
+          <div class="muted" style="font-size:13px">${t.durationText}</div>
+        </div>`;
+      item.addEventListener('click', ()=>{ loadTrack(i); play(); });
+      playlistEl.appendChild(item);
+    });
+  }
+
+  function loadTrack(index){
+    current = index;
+    // if no file specified, we'll create a short generated beep so the interface stays interactive.
+    if(!playlist[index].file){
+      // generate a tiny tone as a fallback
+      const ctx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 44100*1, 44100);
+      const o = ctx.createOscillator(); o.type='sine'; o.frequency.value = 440 + index*30;
+      const g = ctx.createGain(); g.gain.value = 0.15;
+      o.connect(g); g.connect(ctx.destination); o.start(0); o.stop(0.5);
+      ctx.startRendering().then(rendered => {
+        // convert buffer to wav blob and set as source
+        const wav = bufferToWav(rendered);
+        const blob = new Blob([wav], {type:'audio/wav'});
+        audio.src = URL.createObjectURL(blob);
+        playlist[index].file = audio.src;
+        setNowInfo();
+        renderPlaylist();
+      }).catch(()=>{});
+    } else {
+      audio.src = playlist[index].file;
+      setNowInfo();
+      renderPlaylist();
+    }
+  }
+
+  function setNowInfo(){
+    nowTitle.textContent = playlist[current].title;
+    nowInfo.textContent = 'loading duration...';
+    audio.addEventListener('loadedmetadata', ()=> {
+      nowInfo.textContent = 'duration: ' + formatTime(audio.duration);
+    }, {once:true});
+  }
+
+  function play(){
+    if(!audio.src) loadTrack(current);
+    audio.play().then(()=>{ isPlaying=true; playBtn.textContent='⏸'; startProgress(); renderPlaylist(); }).catch(()=>{ /* resume user gesture needed */ });
+  }
+  function pause(){ audio.pause(); isPlaying=false; playBtn.textContent='▶'; stopProgress(); renderPlaylist(); }
+  function toggle(){ if(isPlaying) pause(); else play(); }
+
+  playBtn.addEventListener('click', toggle);
+  prevBtn.addEventListener('click', ()=>{ current = (current-1+playlist.length)%playlist.length; loadTrack(current); if(isPlaying) play(); });
+  nextBtn.addEventListener('click', ()=>{ current = (current+1)%playlist.length; loadTrack(current); if(isPlaying) play(); });
+  vol.addEventListener('input', ()=>{ audio.volume = vol.value; });
+
+  audio.addEventListener('ended', ()=>{ nextBtn.click(); });
+
+  // progress bar interactive
+  const progWrap = document.getElementById('progressWrap');
+  progWrap.addEventListener('click', (e)=>{
+    const rect = progWrap.getBoundingClientRect();
+    const frac = (e.clientX - rect.left) / rect.width;
+    if(audio.duration) audio.currentTime = Math.max(0, Math.min(audio.duration * frac, audio.duration));
+    updateProgress();
+  });
+
+  function startProgress(){ stopProgress(); progTimer = setInterval(updateProgress, 200); }
+  function stopProgress(){ if(progTimer) clearInterval(progTimer); progTimer=null; }
+  function updateProgress(){
+    if(!audio.duration) { progressBar.style.width = '0%'; return; }
+    const pct = (audio.currentTime / audio.duration) * 100;
+    progressBar.style.width = pct + '%';
+  }
+
+  function formatTime(sec){ if(!isFinite(sec)) return '—'; const m = Math.floor(sec/60); const s = Math.floor(sec%60).toString().padStart(2,'0'); return m+':'+s; }
+
+  // tiny helper: convert AudioBuffer -> WAV (for offline rendering fallback)
+  function bufferToWav(buffer) {
+    const numOfChan = buffer.numberOfChannels;
+    const length = buffer.length * numOfChan * 2 + 44;
+    const bufferBuf = new ArrayBuffer(length);
+    const view = new DataView(bufferBuf);
+    /* RIFF identifier */
+    writeString(view, 0, 'RIFF'); writeUint32(view, 4, 36 + buffer.length * numOfChan * 2);
+    writeString(view, 8, 'WAVE'); writeString(view, 12, 'fmt ');
+    writeUint32(view, 16, 16); writeUint16(view, 20, 1); writeUint16(view, 22, numOfChan);
+    writeUint32(view, 24, buffer.sampleRate); writeUint32(view, 28, buffer.sampleRate * numOfChan * 2);
+    writeUint16(view, 32, numOfChan * 2); writeUint16(view, 34, 16); writeString(view, 36, 'data');
+    writeUint32(view, 40, buffer.length * numOfChan * 2);
+    // write interleaved data
+    let offset = 44;
+    const channels = [];
+    for (let i = 0; i < numOfChan; i++) channels.push(buffer.getChannelData(i));
+    for (let i = 0; i < buffer.length; i++) {
+      for (let ch = 0; ch < numOfChan; ch++) {
+        let sample = Math.max(-1, Math.min(1, channels[ch][i]));
+        sample = (sample < 0 ? sample * 0x8000 : sample * 0x7FFF) | 0;
+        view.setInt16(offset, sample, true);
+        offset += 2;
+      }
+    }
+    return view;
+    function writeString(view, offset, str) {
+      for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+    }
+    function writeUint16(view, offset, data) { view.setUint16(offset, data, true); }
+    function writeUint32(view, offset, data) { view.setUint32(offset, data, true); }
+  }
+
+  // initialize
+  renderPlaylist();
+  loadTrack(0);
+  audio.volume = vol.value;
+
+  // ------------- Convenience: drag & drop replacement -------------
+  // Allow dropping image/audio files onto the gallery/player to replace content (single-file friendly)
+  document.addEventListener('dragover', (e)=>e.preventDefault());
+  document.addEventListener('drop', async (e)=>{
+    e.preventDefault();
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if(!f) return;
+    const name = f.name.toLowerCase();
+    if(name.match(/\.(png|jpe?g|gif|svg)$/)){
+      // place first image into gallery[0]
+      const url = URL.createObjectURL(f);
+      galleryData[0].src = url;
+      galleryGrid.querySelectorAll('.thumb img')[0].src = url;
+      alert('Replaced first gallery image (not persisted). To embed permanently, replace placeholder with a data URL inside the HTML.');
+    } else if(name.match(/\.(mp3|wav|ogg|m4a)$/)){
+      // add to playlist
+      const blobUrl = URL.createObjectURL(f);
+      playlist.push({title: f.name, file: blobUrl, durationText:'—'});
+      renderPlaylist();
+      alert('Added "'+f.name+'" to playlist (temporary).');
+    } else {
+      alert('File type not supported by quick-drop (supported: jpg/png/svg/mp3/wav/ogg).');
+    }
+  });
+
+})();
+</script>
 </body>
 </html>
